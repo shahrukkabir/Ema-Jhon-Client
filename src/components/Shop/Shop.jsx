@@ -9,9 +9,18 @@ const Shop = () => {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([])
 
-    const {count} = useLoaderData();
-    console.log(count);
-    
+    const { count } = useLoaderData();
+
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const numberOfPages = Math.ceil(count / itemsPerPage);
+
+    // const pages = []
+    // for(let i=0;i<numberOfPages;i++){
+    //     pages.push(i);
+    // }
+    const pages = [...Array(numberOfPages).keys()];
+    console.log(pages);
+
 
     useEffect(() => {
         fetch('http://localhost:5000/products')
@@ -65,6 +74,11 @@ const Shop = () => {
         deleteShoppingCart();
     }
 
+    const handleItemsPerPage = e =>{
+        const val = parseInt(e.target.value);
+        setItemsPerPage(val);        
+    }
+
     return (
         <div className='shop-container'>
             <div className="products-container">
@@ -82,6 +96,18 @@ const Shop = () => {
                         <button className='btn-proceed'>Review Order</button>
                     </Link>
                 </Cart>
+            </div>
+            {/* pagination */}
+            <div className='pagination'>
+                {
+                    pages.map(page => <button key={page}>{page}</button>)
+                }
+                <select value={itemsPerPage} onChange={handleItemsPerPage} name="" id="">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
             </div>
         </div>
     );
